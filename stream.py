@@ -117,7 +117,7 @@ class MyStreamer(TwythonStreamer):
             timestr = time.strftime("%Y%m%d-%H%M%S")
             urllib.urlretrieve(str(pie), timestr + ".jpg")
 
-            writehourly(timestr,str(numoftweets),str(totaltweets))
+            # writehourly(timestr,str(numoftweets),str(totaltweets))
             f = open("index.html", "a")
             f.write('<a href="' + timestr + '.html">' + timestr + '</a><br>')
             f.close()
