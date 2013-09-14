@@ -17,22 +17,30 @@ import datetime
 import ftplib
 t0= time.time()
 
+#FTP info
 FTP_USERNAME = ""
 FTP_PASSWORD = ""
 FTP_SERVER = ""
+
+#Twitter info
 APP_KEY = 'UxWDcrHo4OwwFtoGd9Jw'
 APP_SECRET = 'pjHX2b1EXW6fCtLHf4t4UVo4E5USP9IIVbZqg87Q'
 OAUTH_TOKEN = '765069332-Z30wNIz7OXirdTz42yyH9UIV2I9iyQhgiBWMGI17'
 OAUTH_TOKEN_SECRET = 'byT2Q8lAJkZfQ4M0euZvMU4uW6vPJhytajPc0NiSNk'
+
+#Start out with 1 (google charts api)
 numoftweets = 1
 totaltweets = 1
-addtohistory = []
+
 tweets = {}
 
+#for debugging purposes.
 countingtada = 0
 
 ##indexfile.close()
 print "Grabbing Tweets"
+
+#List of dictionaries of lists of keywords to identify emotions. (THE SECRET EMOTION EQUATION :D)
 tweets['happy'] = {'q' : ["happy", "yay", "yes", "wow", "amazing", "woot", ":)", "(:", ":D", "xD"], 'col':(255,0,0)}
 tweets['sad'] = {'q' : ["sad", "annoyed", "can't believe", "sucks", ":(", "):", "D:"], 'col':(255,255,0)}
 tweets['fear'] = {'q' : ["afraid", "scared", "can't tell"], 'col':(0,255,0)}
@@ -77,9 +85,6 @@ class MyStreamer(TwythonStreamer):
                    # print data['text'].encode('utf-8')
              
             #data['text'].encode('utf-8')
-        # Want to disconnect after the first result? 14400
-       # t = time.clock() - t0
-       # print t
         
         if time.time() - t0 > 7200:
             current_time = datetime.datetime.now().time()
@@ -138,6 +143,5 @@ stream = MyStreamer(APP_KEY, APP_SECRET,
 
 
 stream.statuses.sample()
-#print addtohistory[1]
 #stream.user()  # Read the authenticated users home timeline (what they see on Twitter) in real-time
 #stream.site(follow='twitter')
