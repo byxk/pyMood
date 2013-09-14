@@ -37,7 +37,6 @@ tweets = {}
 #for debugging purposes.
 countingtada = 0
 
-##indexfile.close()
 print "Grabbing Tweets"
 
 #List of dictionaries of lists of keywords to identify emotions. (THE SECRET EMOTION EQUATION :D)
@@ -50,7 +49,6 @@ tweets['surprise'] = {'q' : ["surprised", "wasn't expecting", "woah"], 'col':(25
 tweets['jelly'] = {'q' : ["jealous", "i want"], 'col':(255,127,0)}
      
 
-
 def writehourly(timestr,nt,tt):
     indexfile = open(timestr + ".html", "w+")
     indexfile.write("<title>" + timestr + "</title>")
@@ -59,6 +57,13 @@ def writehourly(timestr,nt,tt):
     indexfile.write("Number of tweets total: " + tt)
     indexfile.close()
 
+def uploadfiles(lof):
+    session = ftplib.FTP(FTP_SERVER,FTP_USERNAME,FTP_PASSWORD)
+    for i in lof:
+        file = open(i,'rb')                  # file to send
+        session.storbinary('STOR ' + i, file)
+        file.close()                          # close file and FTP
+    session.quit()
 
 for emotion in tweets:
     tweets[emotion]['count'] = 0
@@ -116,16 +121,8 @@ class MyStreamer(TwythonStreamer):
             f = open("index.html", "a")
             f.write('<a href="' + timestr + '.html">' + timestr + '</a><br>')
             f.close()
-       
-            session = ftplib.FTP(FTP_SERVER,FTP_USERNAME,FTP_PASSWORD)
-            file = open('index.html','rb')                  # file to send
-            session.storbinary('STOR index.html', file)     # send the file
-            file = open(timestr + '.jpg', 'rb')
-            session.storbinary('STOR ' + timestr + '.jpg', file)
-            file = open(timestr + '.html', 'rb')
-            session.storbinary('STOR ' + timestr + '.html', file)
-            file.close()                                    # close file and FTP
-            session.quit()
+
+            uploadfiles(['index.html',timestr + '.jpg',timestr + '.html'])
             
             self.disconnect()
             args = sys.argv[:]
