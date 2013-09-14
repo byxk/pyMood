@@ -2,7 +2,11 @@
 ##Captures the generalized mood of the Twittersphere.
 ##Patrick Tseng
 ##Twython, GChartWrapper
-
+##TODO
+##1. Convert the pie chart into a timeline graph. (Intervals of once a day)
+##2. Use a flatfile database to keep track of the history. Can't use MYSQL bc of memory issues on rpi.
+##3. Put in checks to make sure timeline doesn't get wiped during crashes/outages.
+##4. EXTRA FEATURES?!?!?!?!?!
 from twython import TwythonStreamer
 import time
 import os
@@ -15,6 +19,8 @@ import time
 import urllib
 import datetime
 import ftplib
+
+
 t0= time.time()
 
 #FTP info
@@ -125,6 +131,8 @@ class MyStreamer(TwythonStreamer):
             uploadfiles(['index.html',timestr + '.jpg',timestr + '.html'])
             
             self.disconnect()
+
+            #Restart script within itself
             args = sys.argv[:]
             args.insert(0, sys.executable)
             if sys.platform == 'win32':
