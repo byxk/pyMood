@@ -16,6 +16,10 @@ import urllib
 import datetime
 import ftplib
 t0= time.time()
+
+FTP_USERNAME = ""
+FTP_PASSWORD = ""
+FTP_SERVER = ""
 APP_KEY = 'UxWDcrHo4OwwFtoGd9Jw'
 APP_SECRET = 'pjHX2b1EXW6fCtLHf4t4UVo4E5USP9IIVbZqg87Q'
 OAUTH_TOKEN = '765069332-Z30wNIz7OXirdTz42yyH9UIV2I9iyQhgiBWMGI17'
@@ -108,7 +112,7 @@ class MyStreamer(TwythonStreamer):
             f.write('<a href="' + timestr + '.html">' + timestr + '</a><br>')
             f.close()
        
-            session = ftplib.FTP('ftp.meowdesu.net','pymood@meowdesu.net','me0wdesu')
+            session = ftplib.FTP(FTP_SERVER,FTP_USERNAME,FTP_PASSWORD)
             file = open('index.html','rb')                  # file to send
             session.storbinary('STOR index.html', file)     # send the file
             file = open(timestr + '.jpg', 'rb')
