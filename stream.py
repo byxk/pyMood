@@ -19,6 +19,7 @@ import time
 import urllib
 import datetime
 import ftplib
+from gen import *
 
 #period
 timeinsec = 60
