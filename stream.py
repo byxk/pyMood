@@ -21,8 +21,9 @@ import datetime
 import ftplib
 
 #period
-timeinsec = 10
+timeinsec = 60
 t0= time.time()
+d0 = datetime.date.today()
 
 #FTP info
 FTP_USERNAME = ""
@@ -39,7 +40,9 @@ OAUTH_TOKEN_SECRET = 'byT2Q8lAJkZfQ4M0euZvMU4uW6vPJhytajPc0NiSNk'
 numoftweets = 1
 totaltweets = 1
 
-tweets = {}
+emotionCol = {}
+#dayRecord = [d0.month + "." + str(d0.day).zfill(2)]
+dayRecord = [1]
 
 #for debugging purposes.
 countingtada = 0
@@ -47,14 +50,12 @@ countingtada = 0
 print "Grabbing Tweets"
 
 #List of dictionaries of lists of keywords to identify emotions. (THE SECRET EMOTION EQUATION :D)
-tweets['happy'] = {'q' : ["happy", "yay", "yes", "wow", "amazing", "woot", ":)", "(:", ":D", "xD"], 'col':(255,0,0)}
-tweets['sad'] = {'q' : ["sad", "annoyed", "can't believe", "sucks", ":(", "):", "D:"], 'col':(255,255,0)}
-tweets['fear'] = {'q' : ["afraid", "scared", "can't tell"], 'col':(0,255,0)}
-tweets['love'] = {'q' : ["love", "passionate", "like"], 'col':(0,255,255)}
-tweets['anger'] = {'q' : ["angry", "wtf", "mad"], 'col':(0,0,255)}
-tweets['surprise'] = {'q' : ["surprised", "wasn't expecting", "woah"], 'col':(255,0,255)}
-tweets['jelly'] = {'q' : ["jealous", "i want"], 'col':(255,127,0)}
-     
+emotionCol['happy'] = {'q' : ["happy"], 'col':'000000', 'h':[0]}
+emotionCol['sad'] = {'q' : ["sad"], 'col':'FF0000', 'h':[0]}
+emotionCol['confident'] = {'q' : ["confident"], 'col':'444444', 'h':[0]}
+emotionCol['worried'] = {'q' : ["worried"], 'col':'FF4444', 'h':[0]}
+emotionCol['excited'] = {'q' : ["excited"], 'col':'888888', 'h':[0]}
+emotionCol['bored'] = {'q' : ["bored"], 'col':'FF8888', 'h':[0]}
 
 def writehourly(timestr,nt,tt):
     indexfile = open(timestr + ".html", "w+")
@@ -72,60 +73,37 @@ def uploadfiles(lof):
         file.close()                          # close file and FTP
     session.quit()
 
-for emotion in tweets:
-    tweets[emotion]['count'] = 0
-
 class MyStreamer(TwythonStreamer):
     def on_success(self, data):
         global t0
         global numoftweets
         global totaltweets
         global countingtada
-        if 'text' in data:
-           # print data['text'].encode('utf-8')
-            for emotion in tweets:
-                totaltweets += 1
-                for i in tweets[emotion]['q']:
-                    if i in data['text'].encode('utf-8'):
-                        numoftweets += 1
-                        countingtada += 1
-                        tweets[emotion]['count'] +=1
-                        
-                        if countingtada > 60:
-                            countingtada = 0
-                            print emotion, tweets[emotion]['count']
-                   # print data['text'].encode('utf-8')
-             
-            #data['text'].encode('utf-8')
+
         
         if time.time() - t0 > timeinsec:
             current_time = datetime.datetime.now().time()
-            pie = Pie3D([tweets['happy']['count'] / float(numoftweets),  # % calc, google charts api doesn't recognize massive numbers
-                         tweets['sad']['count'] / float(numoftweets),
-                         tweets['fear']['count'] / float(numoftweets),
-                         tweets['love']['count'] / float(numoftweets),
-                         tweets['anger']['count'] / float(numoftweets),
-                         tweets['surprise']['count'] / float(numoftweets),
-                         tweets['jelly']['count'] / float(numoftweets)],
-                        encoding='text').size(750,300)
-            pie.title('2 hour range')
-            pie.color('yellow',
-                         'blue',
-                         'orange',
-                         'red',
-                         'black',
-                         'purple',
-                         'brown' )
-            pie.label('happy' + str(tweets['happy']['count']),
-                         'sad' + str(tweets['sad']['count']),
-                         'fear' + str(tweets['fear']['count']),
-                         'love' + str(tweets['love']['count']),
-                         'anger' + str(tweets['anger']['count']),
-                         'surprise' + str(tweets['surprise']['count']),
-                         'jelly' + str(tweets['jelly']['count']))
-            print pie
+            graph = LineXY( [dayRecord,
+                             [0,10,20,30,40,50],
+                             emotionCol['happy']['h'],
+                             emotionCol['sad']['h'],
+                             emotionCol['confident']['h'],
+                             emotionCol['worried']['h'],
+                             emotionCol['excited']['h'],
+                             emotionCol['bored']['h']
+                             ] )
+            graph.title('pymood')
+            graph.color(
+                             emotionCol['happy']['col'],
+                             emotionCol['sad']['col'],
+                             emotionCol['confident']['col'],
+                             emotionCol['worried']['col'],
+                             emotionCol['excited']['col'],
+                             emotionCol['bored']['col']
+                             )
+            print graph
             timestr = time.strftime("%Y%m%d-%H%M%S")
-            urllib.urlretrieve(str(pie), timestr + ".jpg")
+            urllib.urlretrieve(str(graph), timestr + ".jpg")
 
             # writehourly(timestr,str(numoftweets),str(totaltweets))
             f = open("index.html", "a")
@@ -142,6 +120,28 @@ class MyStreamer(TwythonStreamer):
             if sys.platform == 'win32':
                 args = ['"%s"' % arg for arg in args]
             os.execv(sys.executable, args)
+
+            dayRecord.append(dayRecord[-1] + 1)
+            for emotion in emotionCol:
+                emotionCol[emotion]['h'].append(0)
+            
+            
+        if 'text' in data:
+           # print data['text'].encode('utf-8')
+            for emotion in emotionCol:
+                totaltweets += 1
+                for i in emotionCol[emotion]['q']:
+                    if i in data['text'].encode('utf-8'):
+                        numoftweets += 1
+                        countingtada += 1
+                        emotionCol[emotion]['h'][-1] +=1
+                        
+        if countingtada > 100:
+            countingtada = 0
+            print emotion, emotionCol[emotion]['count']
+                   # print data['text'].encode('utf-8')
+             
+            #data['text'].encode('utf-8')
 
     def on_error(self, status_code, data):
         print status_code, data
