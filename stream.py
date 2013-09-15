@@ -107,19 +107,22 @@ class MyStreamer(TwythonStreamer):
                          tweets['anger']['count'] / float(numoftweets),
                          tweets['surprise']['count'] / float(numoftweets),
                          tweets['jelly']['count'] / float(numoftweets)],
-                        encoding='text').size(750,300).title('2 hour range').color('yellow',
-                                                                                             'blue',
-                                                                                             'orange',
-                                                                                             'red',
-                                                                                             'black',
-                                                                                             'purple',
-                                                                                             'brown' ).label('happy' + str(tweets['happy']['count']),
-                                                                                                             'sad' + str(tweets['sad']['count']),
-                                                                                                             'fear' + str(tweets['fear']['count']),
-                                                                                                             'love' + str(tweets['love']['count']),
-                                                                                                             'anger' + str(tweets['anger']['count']),
-                                                                                                             'surprise' + str(tweets['surprise']['count']),
-                                                                                                             'jelly' + str(tweets['jelly']['count']))
+                        encoding='text').size(750,300)
+            pie.title('2 hour range')
+            pie.color('yellow',
+                         'blue',
+                         'orange',
+                         'red',
+                         'black',
+                         'purple',
+                         'brown' )
+            pie.label('happy' + str(tweets['happy']['count']),
+                         'sad' + str(tweets['sad']['count']),
+                         'fear' + str(tweets['fear']['count']),
+                         'love' + str(tweets['love']['count']),
+                         'anger' + str(tweets['anger']['count']),
+                         'surprise' + str(tweets['surprise']['count']),
+                         'jelly' + str(tweets['jelly']['count']))
             print pie
             timestr = time.strftime("%Y%m%d-%H%M%S")
             urllib.urlretrieve(str(pie), timestr + ".jpg")
