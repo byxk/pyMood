@@ -20,7 +20,8 @@ import urllib
 import datetime
 import ftplib
 
-
+#period
+timeinsec = 10
 t0= time.time()
 
 #FTP info
@@ -97,7 +98,7 @@ class MyStreamer(TwythonStreamer):
              
             #data['text'].encode('utf-8')
         
-        if time.time() - t0 > 7200:
+        if time.time() - t0 > timeinsec:
             current_time = datetime.datetime.now().time()
             pie = Pie3D([tweets['happy']['count'] / float(numoftweets),  # % calc, google charts api doesn't recognize massive numbers
                          tweets['sad']['count'] / float(numoftweets),
