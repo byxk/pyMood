@@ -129,7 +129,7 @@ class MyStreamer(TwythonStreamer):
             f.write('<a href="' + timestr + '.html">' + timestr + '</a><br>')
             f.close()
 
-            uploadfiles(['index.html',timestr + '.jpg',timestr + '.html'])
+            #uploadfiles(['index.html',timestr + '.jpg',timestr + '.html'])
             
             self.disconnect()
 
