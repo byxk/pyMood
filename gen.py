@@ -1,3 +1,5 @@
+import pickle
+
 ##Generate a timeline graph using Google Charts
 ##Functions
 
@@ -25,29 +27,27 @@ endofile = ["var chart = new google.visualization.AnnotatedTimeLine(document.get
 ##genGraph(ListOfDates, DicOfEmotions)
 ##ListofDates - ListOfDateTime
 ##DicOfEmotions - pass emoCOL
-def genGraph(lofd, doe):
+def genGraph(lofd, emotionCol):
     #pickle files for backup.
-    pickle.dump(lofd, open("dr.dat", "rb"))
-    pickle.dump(doe, open("ecol.dat", "rb"))
+    pickle.dump(lofd, open("dr.dat", "wb"))
+    pickle.dump(emotionCol, open("ecol.dat", "wb"))
     thedata = []
-    for i in lofd:
+    for i in range(0,len(lofd)):
         thedata.append('[new Date('
-                       + str(i.year) + "." + str(i.month - 1) + "." + str(i.day) + '),'
-                       + emotionCol["happy"]['h'][i] + ","
-                       + emotionCol["sad"]['h'][i]  + ","
-                       + emotionCol["confident"]['h'][i]  + ","
-                       + emotionCol["worried"]['h'][i] + ","
-                       + emotionCol["excited"]['h'][i] + ","
-                       + emotionCol["bored"]['h'][i] + "],\n")
+                       + str(lofd[i].year) + "." + str(lofd[i].month - 1).zfill(2) + "." + str(lofd[i].day) + '),'
+                       + str(emotionCol["happy"]['h'][i]) + ","
+                       + str(emotionCol["sad"]['h'][i])  + ","
+                       + str(emotionCol["confident"]['h'][i])  + ","
+                       + str(emotionCol["worried"]['h'][i]) + ","
+                       + str(emotionCol["excited"]['h'][i]) + ","
+                       + str(emotionCol["bored"]['h'][i]) + "],\n")
     with open('template.txt', 'r') as file:
          data = file.readlines()
     #lazy mode. check this if template.txt is ever modified.
-         
-    partition(data,[15,16])
-    parts = data[0] + thedata + data[2]
+    data[16] = "".join(thedata)
      
-    with open('index.html', 'w') as file:
-         file.writelines(parts)
+    with open(str(lofd[0].year) + "." + str(lofd[0].month) + '.html', 'w') as file:
+         file.writelines(data)
             
 ##split list at index
 ##partition(List, [index])

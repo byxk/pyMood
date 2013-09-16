@@ -14,7 +14,6 @@ import thread
 import sys
 import math
 import random
-from GChartWrapper import *
 import time
 import urllib
 import datetime
@@ -22,7 +21,7 @@ import ftplib
 from gen import *
 
 #period
-timeinsec = 60
+timeinsec = 15
 t0= time.time()
 d0 = datetime.date.today()
 
@@ -43,7 +42,7 @@ totaltweets = 1
 
 emotionCol = {}
 #dayRecord = [d0.month + "." + str(d0.day).zfill(2)]
-dayRecord = [1]
+dayRecord = [datetime.date.today()]
 
 #for debugging purposes.
 countingtada = 0
@@ -86,46 +85,10 @@ class MyStreamer(TwythonStreamer):
 
         
         if time.time() - t0 > timeinsec:
-            current_time = datetime.datetime.now().time()
-            graph = LineXY( [dayRecord,
-                             [0,10,20,30,40,50],
-                             emotionCol['happy']['h'],
-                             emotionCol['sad']['h'],
-                             emotionCol['confident']['h'],
-                             emotionCol['worried']['h'],
-                             emotionCol['excited']['h'],
-                             emotionCol['bored']['h']
-                             ] )
-            graph.title('pymood')
-            graph.color(
-                             emotionCol['happy']['col'],
-                             emotionCol['sad']['col'],
-                             emotionCol['confident']['col'],
-                             emotionCol['worried']['col'],
-                             emotionCol['excited']['col'],
-                             emotionCol['bored']['col']
-                             )
-            print graph
-            timestr = time.strftime("%Y%m%d-%H%M%S")
-            urllib.urlretrieve(str(graph), timestr + ".jpg")
 
-            # writehourly(timestr,str(numoftweets),str(totaltweets))
-            f = open("index.html", "a")
-            f.write('<a href="' + timestr + '.html">' + timestr + '</a><br>')
-            f.close()
+            genGraph(dayRecord, emotionCol)
 
-            #uploadfiles(['index.html',timestr + '.jpg',timestr + '.html'])
-            
-            self.disconnect()
-
-            #Restart script within itself
-            args = sys.argv[:]
-            args.insert(0, sys.executable)
-            if sys.platform == 'win32':
-                args = ['"%s"' % arg for arg in args]
-            os.execv(sys.executable, args)
-
-            dayRecord.append(dayRecord[-1] + 1)
+            dayRecord.append(datetime.day.today())
             for emotion in emotionCol:
                 emotionCol[emotion]['h'].append(0)
             
