@@ -45,7 +45,8 @@ def genGraph(lofd, emotionCol):
          data = file.readlines()
     #lazy mode. check this if template.txt is ever modified.
     for index, item in enumerate(data):
-        if item.contains("%data%"):
+        print item
+        if "%data%" in item:
             data[index] = "".join(thedata)
             
     with open(str(lofd[0].year) + "." + str(lofd[0].month).zfill(2) + '.html', 'w') as file:

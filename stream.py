@@ -1,7 +1,7 @@
 ##PyMood
 ##Captures the generalized mood of the Twittersphere.
-##Patrick Tseng
-##Twython, GChartWrapper
+##Patrick Tseng, Steven T.
+##Twython, Google Charts API
 ##TODO
 ##1. Convert the pie chart into a timeline graph. (Intervals of once a day)
 ##2. Use a flatfile database to keep track of the history. Can't use MYSQL bc of memory issues on rpi.
@@ -43,7 +43,7 @@ totaltweets = 1
 
 #for debugging purposes.
 countingtada = 0
-
+print "Script has started"
 print "Grabbing Tweets"
 
 dayRecord = []
@@ -62,6 +62,7 @@ emotionColFile = "ecol.dat"
 if (os.path.isfile(emotionColFile)):
     fEC = open(emotionColFile, "rb")
     emotionCol = pickle.load(fEC)
+    print "Loaded a pickle"
 else:
     emotionCol['happy'] = {'q' : ["happy"], 'col':'000000', 'h':[]}
     emotionCol['sad'] = {'q' : ["sad"], 'col':'FF0000', 'h':[]}
@@ -72,14 +73,7 @@ else:
 
 for emotion in emotionCol:
     emotionCol[emotion]['h'].append(0)
-    
-def writehourly(timestr,nt,tt):
-    indexfile = open(timestr + ".html", "w+")
-    indexfile.write("<title>" + timestr + "</title>")
-    indexfile.write('<img src="' + timestr + '.jpg">')
-    indexfile.write("Number of emotional tweets used: " + nt + "<br>")
-    indexfile.write("Number of tweets total: " + tt)
-    indexfile.close()
+
 
 #should do a with open 
 def uploadfiles(lof):
@@ -107,16 +101,18 @@ class MyStreamer(TwythonStreamer):
                 totaltweets += 1
                 for i in emotionCol[emotion]['q']:
                     if i in data['text'].encode('utf-8'):
+                        print time.time()
+                        print data['text'].encode('utf-8')
                         numoftweets += 1
                         countingtada += 1
                         emotionCol[emotion]['h'][-1] +=1
         
         if time.time() - t0 > timeinsec:
-
             genGraph(dayRecord, emotionCol)
-
             self.disconnect()
-
+            print "Disconnected from Twitter stream"
+            print "Restarting script"
+            
             #Restart script within itself
             args = sys.argv[:]
             args.insert(0, sys.executable)
