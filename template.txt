@@ -7,12 +7,12 @@
       function drawChart() {
         var data = new google.visualization.DataTable();
         data.addColumn('date', 'Date');
-        data.addColumn('number', 'Emotion1');
-        data.addColumn('number', 'Emotion1');
-        data.addColumn('number', 'Emotion1');
-        data.addColumn('number', 'Emotion1');
-        data.addColumn('number', 'Emotion1');
-        data.addColumn('number', 'Emotion1');
+        data.addColumn('number', 'Happy');
+        data.addColumn('number', 'Sad');
+        data.addColumn('number', 'Confident');
+        data.addColumn('number', 'Worried');
+        data.addColumn('number', 'Excited');
+        data.addColumn('number', 'Bored');
         data.addRows([
 %data%
         ]);

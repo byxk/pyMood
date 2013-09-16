@@ -1,5 +1,7 @@
 ##Generate a timeline graph using Google Charts
 ##Functions
+
+##references now
 startoffile = ["<html>\n",
                "<head>\n",
                "<script type='text/javascript' src='http://www.google.com/jsapi'></script>\n",
@@ -21,44 +23,30 @@ endofile = ["var chart = new google.visualization.AnnotatedTimeLine(document.get
             "</html>\n"]
             
 ##genGraph(ListOfDates, DicOfEmotions, ListOfListEmotionsVars)
-##ListofDates - Starting from earliest, form is yyyy.mm.dd, 00 is jan
+##ListofDates - ListOfDateTime
 ##DicOfEmotions - pass emoCOL
-##ListOfListEmotionsVar - TO BE CHANGED. For now, each index of emotion must match the dates AND the order of emotions
-def genGraph(lofd, doe, lolev):
-    #Look into appending instead of writing a new file each time....
-    indexfile = open("index.html", "r+")
-    indexfile.writelines(startoffile)
-    for emotion in doe:
-        indexfile.write("data.addColumn('number', '" + emotion + "');\n")
-    indexfile.write("data.addRows([\n")
+def genGraph(lofd, doe):
+    
+Date("+dayRecord[i].year+...+emotionCol["happy"]['h'][i]+","+...
+    
+    thedata = []
     for i in lofd:
-        indexfile.write('[new Date(' + splitDate(i, "y") +
-                        ',' + splitDate(i, "y") +
-                        ','+ splitDate(i, "y") + '),' + getDel(i) + '],\n')
+        thedata.append('[new Date(' + str(i.year) + "." + str(i.month - 1) + "." + str(i.day) + '),'
+                        + emotionCol["happy"]['h'][i] + ","
+                        + emotionCol["sad"]['h'][i]  + ","
+                        + emotionCol["confident"]['h'][i]  + ","
+                        + emotionCol["worried"]['h'][i] + ","
+                        + emotionCol["excited"]['h'][i] + ","
+                        + emotionCol["bored"]['h'][i] + "],\n")
 
-    ##CHECK FOR LAST LINE, doesn't need a comma
-    indexfile.write("]);\n")
-    indexfile.write(endoffile)
-    indexfile.close()
+     with open('template.txt', 'r') as file:
+         data = file.readlines()
 
-##TODO: Create a def that compilies a line of the #'s of tweets in emotion order.
-##EX: if the only emotions are happy, sad, and happy has 1000 while sad has 600, output should be
-##"1000, 600"
-##NOTE that each output is for a specific day. genGraph will iterate thru each day request a line like that
-##Dateformat = yyyy.mm.dd?
-def getDEL(date):
-    count = 0
-    
-    
+     data[16] = thedata
+     with open('index.html', 'w') as file:
+         file.writelines(data)
+            
 
-##splitDate(date in str, p is mode)
-##p = "y", "m", or "d"
-def splitDate(d,p):
-    date = d.split(".")
-    if p is "y":
-        return date[0]
-    if p is "m":
-        return date[1]
-    if p is "d":
-        return date[2]
-    return 
+     
+
+
