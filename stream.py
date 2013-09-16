@@ -66,14 +66,17 @@ def writehourly(timestr,nt,tt):
     indexfile.write("Number of tweets total: " + tt)
     indexfile.close()
 
+#should do a with open 
 def uploadfiles(lof):
     session = ftplib.FTP(FTP_SERVER,FTP_USERNAME,FTP_PASSWORD)
     for i in lof:
         file = open(i,'rb')                  # file to send
         session.storbinary('STOR ' + i, file)
         file.close()                          # close file and FTP
+    print "files uploaded"
     session.quit()
 
+#basic class provided by twython example code.
 class MyStreamer(TwythonStreamer):
     def on_success(self, data):
         global t0
@@ -140,9 +143,6 @@ class MyStreamer(TwythonStreamer):
         if countingtada > 100:
             countingtada = 0
             print emotion, emotionCol[emotion]['count']
-                   # print data['text'].encode('utf-8')
-             
-            #data['text'].encode('utf-8')
 
     def on_error(self, status_code, data):
         print status_code, data
@@ -151,7 +151,8 @@ class MyStreamer(TwythonStreamer):
 stream = MyStreamer(APP_KEY, APP_SECRET,
                     OAUTH_TOKEN, OAUTH_TOKEN_SECRET)
 
-
+#.sample - get all tweets
+#.filter - filter out tweets.
 stream.statuses.sample()
 #stream.user()  # Read the authenticated users home timeline (what they see on Twitter) in real-time
 #stream.site(follow='twitter')
