@@ -27,23 +27,22 @@ endofile = ["var chart = new google.visualization.AnnotatedTimeLine(document.get
 ##DicOfEmotions - pass emoCOL
 def genGraph(lofd, doe):
     
-Date("+dayRecord[i].year+...+emotionCol["happy"]['h'][i]+","+...
-    
     thedata = []
     for i in lofd:
-        thedata.append('[new Date(' + str(i.year) + "." + str(i.month - 1) + "." + str(i.day) + '),'
-                        + emotionCol["happy"]['h'][i] + ","
-                        + emotionCol["sad"]['h'][i]  + ","
-                        + emotionCol["confident"]['h'][i]  + ","
-                        + emotionCol["worried"]['h'][i] + ","
-                        + emotionCol["excited"]['h'][i] + ","
-                        + emotionCol["bored"]['h'][i] + "],\n")
-
-     with open('template.txt', 'r') as file:
+        thedata.append('[new Date('
+                       + str(i.year) + "." + str(i.month - 1) + "." + str(i.day) + '),'
+                       + emotionCol["happy"]['h'][i] + ","
+                       + emotionCol["sad"]['h'][i]  + ","
+                       + emotionCol["confident"]['h'][i]  + ","
+                       + emotionCol["worried"]['h'][i] + ","
+                       + emotionCol["excited"]['h'][i] + ","
+                       + emotionCol["bored"]['h'][i] + "],\n")
+    with open('template.txt', 'r') as file:
          data = file.readlines()
 
-     data[16] = thedata
-     with open('index.html', 'w') as file:
+    data[16] = thedata
+     
+    with open('index.html', 'w') as file:
          file.writelines(data)
             
 
