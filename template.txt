@@ -25,16 +25,11 @@
   </head>
   <b><h1>pyMood</h1></b>
   <body>
-<<<<<<< HEAD
     <div id='chart_div' style='width: 700px; height: 400px;'></div>
-
-=======
-    <div id='chart_div' style='width: 700px; height: 240px;'></div>
 <br>
 <u>Notes:</u>
 <br>
 pyMood is a Python script running 24/7 on a Raspberry Pi Model B. It uses Twitter's streaming API via <a href="https://github.com/ryanmcgrath/twython">Twython</a>. Timeline is generated using <a href="https://developers.google.com/chart/">Google Charts API</a>, supported via a small custom wrapper coded specifically for the timeline portion. <br>
 Source is found <a href="https://github.com/byxk/pyMood">here on Github!</a>
->>>>>>> 7cc605c673981c2e48c09b3e01c2b54656be364b
   </body>
 </html>

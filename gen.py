@@ -41,11 +41,13 @@ def genGraph(lofd, emotionCol):
                        + str(emotionCol["worried"]['h'][i]) + ","
                        + str(emotionCol["excited"]['h'][i]) + ","
                        + str(emotionCol["bored"]['h'][i]) + "],\n")
+
+    
+    thedata[len(thedata) - 1] = thedata[len(thedata) - 1][0:-2] #trims the "," at the very end
     with open('template.txt', 'r') as file:
          data = file.readlines()
     #lazy mode. check this if template.txt is ever modified.
     for index, item in enumerate(data):
-        print item
         if "%data%" in item:
             data[index] = "".join(thedata)
             
