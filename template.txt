@@ -24,7 +24,7 @@
   </head>
 
   <body>
-    <div id='chart_div' style='width: 700px; height: 240px;'></div>
+    <div id='chart_div' style='width: 700px; height: 400px;'></div>
 
   </body>
 </html>
