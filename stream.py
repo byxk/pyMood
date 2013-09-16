@@ -88,7 +88,8 @@ class MyStreamer(TwythonStreamer):
 
             genGraph(dayRecord, emotionCol)
 
-            dayRecord.append(datetime.day.today())
+            #dayRecord.append(datetime.date.today())
+            dayRecord.append(dayRecord[-1].replace(day=dayRecord[-1].day+1))
             for emotion in emotionCol:
                 emotionCol[emotion]['h'].append(0)
             

@@ -34,7 +34,7 @@ def genGraph(lofd, emotionCol):
     thedata = []
     for i in range(0,len(lofd)):
         thedata.append('[new Date('
-                       + str(lofd[i].year) + "." + str(lofd[i].month - 1).zfill(2) + "." + str(lofd[i].day) + '),'
+                       + str(lofd[i].year) + "," + str(lofd[i].month - 1) + "," + str(lofd[i].day) + '),'
                        + str(emotionCol["happy"]['h'][i]) + ","
                        + str(emotionCol["sad"]['h'][i])  + ","
                        + str(emotionCol["confident"]['h'][i])  + ","
@@ -46,7 +46,7 @@ def genGraph(lofd, emotionCol):
     #lazy mode. check this if template.txt is ever modified.
     data[16] = "".join(thedata)
      
-    with open(str(lofd[0].year) + "." + str(lofd[0].month) + '.html', 'w') as file:
+    with open(str(lofd[0].year) + "." + str(lofd[0].month).zfill(2) + '.html', 'w') as file:
          file.writelines(data)
             
 ##split list at index
