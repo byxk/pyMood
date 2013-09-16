@@ -19,6 +19,7 @@ import urllib
 import datetime
 import ftplib
 from gen import *
+import pickle
 
 #period
 timeinsec = 15
@@ -40,23 +41,38 @@ OAUTH_TOKEN_SECRET = 'byT2Q8lAJkZfQ4M0euZvMU4uW6vPJhytajPc0NiSNk'
 numoftweets = 1
 totaltweets = 1
 
-emotionCol = {}
-#dayRecord = [d0.month + "." + str(d0.day).zfill(2)]
-dayRecord = [datetime.date.today()]
-
 #for debugging purposes.
 countingtada = 0
 
 print "Grabbing Tweets"
 
+dayRecord = []
+dayRecordFile = "dr.dat"
+if (os.path.isfile(dayRecordFile)):
+    fDR = open(dayRecordFile, "rb")
+    dayRecord = pickle.load(fDR)
+    dayRecord.append(dayRecord[-1].replace(day=dayRecord[-1].day+1))
+else:
+    dayRecord.append(datetime.date.today())
+    
 #List of dictionaries of lists of keywords to identify emotions. (THE SECRET EMOTION EQUATION :D)
-emotionCol['happy'] = {'q' : ["happy"], 'col':'000000', 'h':[0]}
-emotionCol['sad'] = {'q' : ["sad"], 'col':'FF0000', 'h':[0]}
-emotionCol['confident'] = {'q' : ["confident"], 'col':'444444', 'h':[0]}
-emotionCol['worried'] = {'q' : ["worried"], 'col':'FF4444', 'h':[0]}
-emotionCol['excited'] = {'q' : ["excited"], 'col':'888888', 'h':[0]}
-emotionCol['bored'] = {'q' : ["bored"], 'col':'FF8888', 'h':[0]}
+emotionCol = {}
+emotionColFile = "ecol.dat"
 
+if (os.path.isfile(emotionColFile)):
+    fEC = open(emotionColFile, "rb")
+    emotionCol = pickle.load(fEC)
+else:
+    emotionCol['happy'] = {'q' : ["happy"], 'col':'000000', 'h':[]}
+    emotionCol['sad'] = {'q' : ["sad"], 'col':'FF0000', 'h':[]}
+    emotionCol['confident'] = {'q' : ["confident"], 'col':'444444', 'h':[]}
+    emotionCol['worried'] = {'q' : ["worried"], 'col':'FF4444', 'h':[]}
+    emotionCol['excited'] = {'q' : ["excited"], 'col':'888888', 'h':[]}
+    emotionCol['bored'] = {'q' : ["bored"], 'col':'FF8888', 'h':[]}
+
+for emotion in emotionCol:
+    emotionCol[emotion]['h'].append(0)
+    
 def writehourly(timestr,nt,tt):
     indexfile = open(timestr + ".html", "w+")
     indexfile.write("<title>" + timestr + "</title>")
@@ -82,17 +98,8 @@ class MyStreamer(TwythonStreamer):
         global numoftweets
         global totaltweets
         global countingtada
-
-        
-        if time.time() - t0 > timeinsec:
-
-            genGraph(dayRecord, emotionCol)
-
-            #dayRecord.append(datetime.date.today())
-            dayRecord.append(dayRecord[-1].replace(day=dayRecord[-1].day+1))
-            for emotion in emotionCol:
-                emotionCol[emotion]['h'].append(0)
-            
+        global dayRecord
+        global emotionCol    
             
         if 'text' in data:
            # print data['text'].encode('utf-8')
@@ -103,10 +110,19 @@ class MyStreamer(TwythonStreamer):
                         numoftweets += 1
                         countingtada += 1
                         emotionCol[emotion]['h'][-1] +=1
-                        
-        if countingtada > 100:
-            countingtada = 0
-            print emotion, emotionCol[emotion]['count']
+        
+        if time.time() - t0 > timeinsec:
+
+            genGraph(dayRecord, emotionCol)
+
+            self.disconnect()
+
+            #Restart script within itself
+            args = sys.argv[:]
+            args.insert(0, sys.executable)
+            if sys.platform == 'win32':
+                args = ['"%s"' % arg for arg in args]
+            os.execv(sys.executable, args)
 
     def on_error(self, status_code, data):
         print status_code, data
