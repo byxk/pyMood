@@ -22,11 +22,13 @@ endofile = ["var chart = new google.visualization.AnnotatedTimeLine(document.get
             "</body>\n",
             "</html>\n"]
             
-##genGraph(ListOfDates, DicOfEmotions, ListOfListEmotionsVars)
+##genGraph(ListOfDates, DicOfEmotions)
 ##ListofDates - ListOfDateTime
 ##DicOfEmotions - pass emoCOL
 def genGraph(lofd, doe):
-    
+    #pickle files for backup.
+    pickle.dump(lofd, open("dr.dat", "rb"))
+    pickle.dump(doe, open("ecol.dat", "rb"))
     thedata = []
     for i in lofd:
         thedata.append('[new Date('
@@ -39,13 +41,18 @@ def genGraph(lofd, doe):
                        + emotionCol["bored"]['h'][i] + "],\n")
     with open('template.txt', 'r') as file:
          data = file.readlines()
-
-    data[16] = thedata
+    #lazy mode. check this if template.txt is ever modified.
+         
+    partition(data,[15,16])
+    parts = data[0] + thedata + data[2]
      
     with open('index.html', 'w') as file:
-         file.writelines(data)
+         file.writelines(parts)
             
-
-     
+##split list at index
+##partition(List, [index])
+    
+def partition(alist, indices):
+    return [alist[i:j] for i, j in zip([0]+indices, indices+[None])]     
 
 
