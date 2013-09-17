@@ -53,6 +53,18 @@ def genGraph(lofd, emotionCol):
             
     with open(str(lofd[0].year) + "." + str(lofd[0].month).zfill(2) + '.html', 'w') as file:
          file.writelines(data)
+         
+    myfile = open("index.html", "a+")
+    tempdata = myfile.readlines()
+    tempdata1 = False
+    for index, item in enumerate(tempdata):
+        print item
+        if '<a href="' + str(lofd[0].year) + "." + str(lofd[0].month).zfill(2) + '.html">'+ str(lofd[0].year) + "." + str(lofd[0].month).zfill(2) + '</a><br>\n' in item:
+            tempdata1 = True
+    if tempdata1 is False:
+        myfile.write('<a href="'
+                 + str(lofd[0].year) + "." + str(lofd[0].month).zfill(2) + '.html">'
+                 + str(lofd[0].year) + "." + str(lofd[0].month).zfill(2) + '</a><br>\n')
             
 ##split list at index
 ##partition(List, [index])
