@@ -24,14 +24,14 @@ from os import listdir
 from os.path import isfile, join
 
 #period
-timeinsec = 30
+timeinsec = 86400
 t0= time.time()
 d0 = datetime.date.today()
 
 #FTP info
-FTP_USERNAME = ""
-FTP_PASSWORD = ""
-FTP_SERVER = ""
+FTP_USERNAME = "pymood@meowdesu.net"
+FTP_PASSWORD = "meowdesu"
+FTP_SERVER = "ftp.meowdesu.net"
 
 #Twitter info
 APP_KEY = 'cljOyaQNUv5KXG6qUvRmA'
@@ -53,7 +53,7 @@ dayRecordFile = "dr.dat"
 if (os.path.isfile(dayRecordFile)):
     fDR = open(dayRecordFile, "rb")
     dayRecord = pickle.load(fDR)
-    #dayRecord.append(dayRecord[-1].replace(day=dayRecord[-1].day+1))
+    dayRecord.append(dayRecord[-1].replace(day=dayRecord[-1].day+1))
 else:
     dayRecord.append(datetime.date.today())
     
@@ -66,18 +66,15 @@ if (os.path.isfile(emotionColFile)):
     emotionCol = pickle.load(fEC)
     print "Loaded a pickle"
 else:
-    emotionCol['happy'] = {'q' : ["happy"], 'col':'000000', 'h':[0]}
+    emotionCol['happy'] = {'q' : ["happy"], 'col':'000000', 'h':[]}
     emotionCol['sad'] = {'q' : ["sad"], 'col':'FF0000', 'h':[]}
-    emotionCol['confident'] = {'q' : ["confident"], 'col':'444444', 'h':[0]}
-    emotionCol['worried'] = {'q' : ["worried"], 'col':'FF4444', 'h':[0]}
-    emotionCol['excited'] = {'q' : ["excited"], 'col':'888888', 'h':[0]}
-    emotionCol['bored'] = {'q' : ["bored"], 'col':'FF8888', 'h':[0]}
+    emotionCol['confident'] = {'q' : ["confident"], 'col':'444444', 'h':[]}
+    emotionCol['worried'] = {'q' : ["worried"], 'col':'FF4444', 'h':[]}
+    emotionCol['excited'] = {'q' : ["excited"], 'col':'888888', 'h':[]}
+    emotionCol['bored'] = {'q' : ["bored"], 'col':'FF8888', 'h':[]}
 
-if dayRecord[-1] not datetime.date.today():
-    for emotion in emotionCol:
-        emotionCol[emotion]['h'].append(0)
-    dayRecord.append(datetime.date.today())
-        
+for emotion in emotionCol:
+    emotionCol[emotion]['h'].append(0)
 
 
 #should do a with open 
@@ -99,13 +96,13 @@ class MyStreamer(TwythonStreamer):
         global countingtada
         global dayRecord
         global emotionCol    
-        datastr = data['text'].encode('utf-8').lower()
-        if 'text' in datastr:
-          # print data['text'].encode('utf-8')
+            
+        if 'text' in data:
+           # print data['text'].encode('utf-8')
             for emotion in emotionCol:
                 totaltweets += 1
                 for i in emotionCol[emotion]['q']:
-                    if i in datastr:
+                    if i in data['text'].encode('utf-8'):
                         #print time.time()
                         #print data['text'].encode('utf-8')
                         numoftweets += 1
@@ -113,14 +110,14 @@ class MyStreamer(TwythonStreamer):
                         print str(totaltweets)
                         print str(numoftweets)
                         emotionCol[emotion]['h'][-1] +=1
-                        break
         
         if time.time() - t0 > timeinsec:
             genGraph(dayRecord, emotionCol)
             self.disconnect()
             print "Disconnected from Twitter stream"
             print "Restarting script"
-            files = [f for f in os.listdir('.') if os.path.isfile(f)]
+            files = [f for f in os.listdir('.') if os.path.isfile(f) and ".html" in f]
+            print files
             uploadfiles(files)
             #Restart script within itself
             args = sys.argv[:]
