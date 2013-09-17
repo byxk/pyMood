@@ -1,36 +1,13 @@
 import pickle
+import datetime
 
 ##Generate a timeline graph using Google Charts
 ##Functions
 
-##references now
-startoffile = ["<html>\n",
-               "<head>\n",
-               "<script type='text/javascript' src='http://www.google.com/jsapi'></script>\n",
-               "<script type='text/javascript'>\n",
-               "google.load('visualization', '1', {'packages':['annotatedtimeline']});\n",
-               "google.setOnLoadCallback(drawChart);\n",
-               "function drawChart() {\n",
-               "var data = new google.visualization.DataTable();\n",
-               "data.addColumn('date', 'Date');\n"]
-               
-endofile = ["var chart = new google.visualization.AnnotatedTimeLine(document.getElementById('chart_div'));\n",
-            "chart.draw(data, {displayAnnotations: true});\n",
-            "}\n",
-            "</script>\n",
-            "</head>\n",
-            "<body>\n",
-            "<div id='chart_div' style='width: 700px; height: 240px;'></div>\n",
-            "</body>\n",
-            "</html>\n"]
-            
 ##genGraph(ListOfDates, DicOfEmotions)
 ##ListofDates - ListOfDateTime
 ##DicOfEmotions - pass emoCOL
 def genGraph(lofd, emotionCol):
-    #pickle files for backup.
-    pickle.dump(lofd, open("dr.dat", "wb"))
-    pickle.dump(emotionCol, open("ecol.dat", "wb"))
     thedata = []
     for i in range(0,len(lofd)):
         thedata.append('[new Date('
@@ -65,11 +42,12 @@ def genGraph(lofd, emotionCol):
         myfile.write('<a href="'
                  + str(lofd[0].year) + "." + str(lofd[0].month).zfill(2) + '.html">'
                  + str(lofd[0].year) + "." + str(lofd[0].month).zfill(2) + '</a><br>\n')
-            
-##split list at index
-##partition(List, [index])
-    
-def partition(alist, indices):
-    return [alist[i:j] for i, j in zip([0]+indices, indices+[None])]     
 
-
+    #pickle files for backup.
+    if datetime.date.today().month == lofd[-1].month:
+        pickle.dump(lofd, open("dr.dat", "wb"))
+        pickle.dump(emotionCol, open("ecol.dat", "wb"))
+    else:
+        if os.path.isfile("dr.dat"):
+                os.remove("dr.dat")
+                os.remove("ecol.dat")

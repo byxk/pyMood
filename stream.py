@@ -24,7 +24,7 @@ from os import listdir
 from os.path import isfile, join
 
 #period
-timeinsec = 30
+timeinsec = 60
 t0= time.time()
 d0 = datetime.date.today()
 
@@ -67,13 +67,13 @@ if (os.path.isfile(emotionColFile)):
     print "Loaded a pickle"
 else:
     emotionCol['happy'] = {'q' : ["happy"], 'col':'000000', 'h':[0]}
-    emotionCol['sad'] = {'q' : ["sad"], 'col':'FF0000', 'h':[]}
+    emotionCol['sad'] = {'q' : ["sad"], 'col':'FF0000', 'h':[0]}
     emotionCol['confident'] = {'q' : ["confident"], 'col':'444444', 'h':[0]}
     emotionCol['worried'] = {'q' : ["worried"], 'col':'FF4444', 'h':[0]}
     emotionCol['excited'] = {'q' : ["excited"], 'col':'888888', 'h':[0]}
     emotionCol['bored'] = {'q' : ["bored"], 'col':'FF8888', 'h':[0]}
 
-if dayRecord[-1] not datetime.date.today():
+if dayRecord[-1] != datetime.date.today():
     for emotion in emotionCol:
         emotionCol[emotion]['h'].append(0)
     dayRecord.append(datetime.date.today())
@@ -99,8 +99,9 @@ class MyStreamer(TwythonStreamer):
         global countingtada
         global dayRecord
         global emotionCol    
-        datastr = data['text'].encode('utf-8').lower()
-        if 'text' in datastr:
+        
+        if 'text' in data:
+            datastr = data['text'].encode('utf-8').lower()
           # print data['text'].encode('utf-8')
             for emotion in emotionCol:
                 totaltweets += 1
@@ -121,7 +122,7 @@ class MyStreamer(TwythonStreamer):
             print "Disconnected from Twitter stream"
             print "Restarting script"
             files = [f for f in os.listdir('.') if os.path.isfile(f)]
-            uploadfiles(files)
+            #uploadfiles(files)
             #Restart script within itself
             args = sys.argv[:]
             args.insert(0, sys.executable)
