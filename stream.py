@@ -3,10 +3,8 @@
 ##Patrick Tseng, Steven T.
 ##Twython, Google Charts API
 ##TODO
-##1. Convert the pie chart into a timeline graph. (Intervals of once a day)
-##2. Use a flatfile database to keep track of the history. Can't use MYSQL bc of memory issues on rpi.
-##3. Put in checks to make sure timeline doesn't get wiped during crashes/outages.
-##4. EXTRA FEATURES?!?!?!?!?!
+##1.Prevent script from crashing when there isn't network connectivity
+##2. EXTRA FEATURES?!?!?!?!?!
 from twython import TwythonStreamer
 import time
 import os
@@ -22,9 +20,10 @@ from gen import *
 import pickle
 from os import listdir
 from os.path import isfile, join
+import subprocess
 
 #period
-timeinsec = 60
+timeinsec = 3600
 t0= time.time()
 d0 = datetime.date.today()
 
@@ -89,7 +88,12 @@ def uploadfiles(lof):
         file.close()                          # close file and FTP
     print "files uploaded"
     session.quit()
-
+def restartscript():
+    args = sys.argv[:]
+    args.insert(0, sys.executable)
+    if sys.platform == 'win32':
+        args = ['"%s"' % arg for arg in args]
+    os.execv(sys.executable, args)
 #basic class provided by twython example code.
 class MyStreamer(TwythonStreamer):
     def on_success(self, data):
@@ -120,18 +124,21 @@ class MyStreamer(TwythonStreamer):
             genGraph(dayRecord, emotionCol)
             self.disconnect()
             print "Disconnected from Twitter stream"
-            print "Restarting script"
-            files = [f for f in os.listdir('.') if os.path.isfile(f)]
+            print "Uploading files"
+            #files = [f for f in os.listdir('.') if os.path.isfile(f)]
             #uploadfiles(files)
+            try:
+                subprocess.check_call(['../dropbox_uploader.sh', 'upload', '../pymood', 'Public/PM'])
+            except:
+                restartscript()
             #Restart script within itself
-            args = sys.argv[:]
-            args.insert(0, sys.executable)
-            if sys.platform == 'win32':
-                args = ['"%s"' % arg for arg in args]
-            os.execv(sys.executable, args)
+            print "Restarting script..."
+            restartscript()
 
     def on_error(self, status_code, data):
         print status_code, data
+        ##Copy and pasted restart code, lol.
+        restartscript()
 
 # Requires Authentication as of Twitter API v1.1
 stream = MyStreamer(APP_KEY, APP_SECRET,
@@ -139,6 +146,10 @@ stream = MyStreamer(APP_KEY, APP_SECRET,
 
 #.sample - get all tweets
 #.filter - filter out tweets.
-stream.statuses.sample()
+try:
+    ##not sure if this is only called once to established a connection
+    stream.statuses.sample()
+except:
+    restartscript()
 #stream.user()  # Read the authenticated users home timeline (what they see on Twitter) in real-time
 #stream.site(follow='twitter')
