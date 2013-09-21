@@ -27,11 +27,6 @@ timeinsec = 3600
 t0= time.time()
 d0 = datetime.date.today()
 
-#FTP info
-FTP_USERNAME = ""
-FTP_PASSWORD = ""
-FTP_SERVER = ""
-
 #Twitter info
 APP_KEY = 'cljOyaQNUv5KXG6qUvRmA'
 APP_SECRET = 'pyjp9rKDRvRPhdOuxoHRoKUNRuVLUuz1xuyhXqZKttc'
@@ -76,18 +71,7 @@ if dayRecord[-1] != datetime.date.today():
     for emotion in emotionCol:
         emotionCol[emotion]['h'].append(0)
     dayRecord.append(datetime.date.today())
-        
-
-
-#should do a with open 
-def uploadfiles(lof):
-    session = ftplib.FTP(FTP_SERVER,FTP_USERNAME,FTP_PASSWORD)
-    for i in lof:
-        file = open(i,'rb')                  # file to send
-        session.storbinary('STOR ' + i, file)
-        file.close()                          # close file and FTP
-    print "files uploaded"
-    session.quit()
+    
 def restartscript():
     args = sys.argv[:]
     args.insert(0, sys.executable)
