@@ -27,11 +27,17 @@ timeinsec = 3600
 t0= time.time()
 d0 = datetime.date.today()
 
-#Twitter info
-APP_KEY = 'cljOyaQNUv5KXG6qUvRmA'
-APP_SECRET = 'pyjp9rKDRvRPhdOuxoHRoKUNRuVLUuz1xuyhXqZKttc'
-OAUTH_TOKEN = '765069332-Z30wNIz7OXirdTz42yyH9UIV2I9iyQhgiBWMGI17'
-OAUTH_TOKEN_SECRET = 'byT2Q8lAJkZfQ4M0euZvMU4uW6vPJhytajPc0NiSNk'
+#Twitter info is now stored in key.txt
+#First line is APP_KEY
+#Second is APP_SECRET, third is OAUTH_TOKEN, and fourth is OAUTH_TOKEN_SECRET
+#Create the file first!
+mykeyfile = open("key.txt", "r")
+print "Reading keys..."
+mykeys = mykeyfile.readlines()
+APP_KEY = mykeys[0]
+APP_SECRET = mykeys[1]
+OAUTH_TOKEN = mykeys[2]
+OAUTH_TOKEN_SECRET = mykeys[3]
 
 #Start out with 1 (google charts api)
 numoftweets = 1
