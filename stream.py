@@ -65,12 +65,12 @@ if (os.path.isfile(emotionColFile)):
     emotionCol = pickle.load(fEC)
     print "Loaded a pickle"
 else:
-    emotionCol['happy'] = {'q' : ["happy"], 'col':'000000', 'h':[0]}
-    emotionCol['sad'] = {'q' : ["sad"], 'col':'FF0000', 'h':[0]}
-    emotionCol['confident'] = {'q' : ["confident"], 'col':'444444', 'h':[0]}
-    emotionCol['worried'] = {'q' : ["worried"], 'col':'FF4444', 'h':[0]}
-    emotionCol['excited'] = {'q' : ["excited"], 'col':'888888', 'h':[0]}
-    emotionCol['bored'] = {'q' : ["bored"], 'col':'FF8888', 'h':[0]}
+    emotionCol['happy'] = {'q' : ["i'm happy", "yay"], 'col':'000000', 'h':[0]}
+    emotionCol['sad'] = {'q' : ["i'm sad", "i'm disappointed"], 'col':'FF0000', 'h':[0]}
+    emotionCol['confident'] = {'q' : ["i feel good", "confident"], 'col':'444444', 'h':[0]}
+    emotionCol['worried'] = {'q' : ["worried", "can't believe"], 'col':'FF4444', 'h':[0]}
+    emotionCol['excited'] = {'q' : ["excited", "i can't wait"], 'col':'888888', 'h':[0]}
+    emotionCol['bored'] = {'q' : ["bored", "nothing to do"], 'col':'FF8888', 'h':[0]}
 
 if dayRecord[-1] != datetime.date.today():
     for emotion in emotionCol:
