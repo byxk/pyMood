@@ -7,17 +7,17 @@ import datetime
 ##genGraph(ListOfDates, DicOfEmotions)
 ##ListofDates - ListOfDateTime
 ##DicOfEmotions - pass emoCOL
-def genGraph(lofd, emotionCol):
+def genGraph(lofd, emotionCol, totaltweets):
     thedata = []
     for i in range(0,len(lofd)):
         thedata.append('[new Date('
                        + str(lofd[i].year) + "," + str(lofd[i].month - 1) + "," + str(lofd[i].day) + '),'
-                       + str(emotionCol["happy"]['h'][i]) + ","
-                       + str(emotionCol["sad"]['h'][i])  + ","
-                       + str(emotionCol["confident"]['h'][i])  + ","
-                       + str(emotionCol["worried"]['h'][i]) + ","
-                       + str(emotionCol["excited"]['h'][i]) + ","
-                       + str(emotionCol["bored"]['h'][i]) + "],\n")
+                       + str((emotionCol["happy"]['h'][i])/totaltweets) + ","
+                       + str((emotionCol["sad"]['h'][i])/totaltweets)  + ","
+                       + str((emotionCol["confident"]['h'][i])/totaltweets)  + ","
+                       + str((emotionCol["worried"]['h'][i])/totaltweets) + ","
+                       + str((emotionCol["excited"]['h'][i])/totaltweets) + ","
+                       + str((emotionCol["bored"]['h'][i])/totaltweets) + "],\n")
 
     
     thedata[len(thedata) - 1] = thedata[len(thedata) - 1][0:-2] #trims the "," at the very end

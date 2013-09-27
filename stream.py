@@ -3,8 +3,7 @@
 ##Patrick Tseng, Steven T.
 ##Twython, Google Charts API
 ##TODO
-##1.Prevent script from crashing when there isn't network connectivity
-##2. EXTRA FEATURES?!?!?!?!?!
+##1. Statistics?!
 from twython import TwythonStreamer
 import time
 import os
@@ -111,7 +110,7 @@ class MyStreamer(TwythonStreamer):
                         break
         
         if time.time() - t0 > timeinsec:
-            genGraph(dayRecord, emotionCol)
+            genGraph(dayRecord, emotionCol, totaltweets)
             self.disconnect()
             print "Disconnected from Twitter stream"
             print "Uploading files"
