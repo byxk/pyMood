@@ -26,7 +26,7 @@
 <div style="width:800px; margin: 0 auto 0 auto;">
   <b><h1>pyMood</h1></b>
   <body>
-    <div id='chart_div' style='width: 700px; height: 400px;'></div>
+    <div id='chart_div' style='width: 800px; height: 400px;'></div>
 <br>
 <u>Notes:</u>
 <br>

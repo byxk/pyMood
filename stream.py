@@ -33,10 +33,10 @@ d0 = datetime.date.today()
 mykeyfile = open("key.txt", "r")
 print "Reading keys..."
 mykeys = mykeyfile.readlines()
-APP_KEY = mykeys[0]
-APP_SECRET = mykeys[1]
-OAUTH_TOKEN = mykeys[2]
-OAUTH_TOKEN_SECRET = mykeys[3]
+APP_KEY =  mykeys[0].strip()
+APP_SECRET =  mykeys[1].strip()
+OAUTH_TOKEN =  mykeys[2].strip()
+OAUTH_TOKEN_SECRET =  mykeys[3].strip()
 
 #Start out with 1 (google charts api)
 numoftweets = 1
