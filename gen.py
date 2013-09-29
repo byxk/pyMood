@@ -12,12 +12,12 @@ def genGraph(lofd, emotionCol, totaltweets):
     for i in range(0,len(lofd)):
         thedata.append('[new Date('
                        + str(lofd[i].year) + "," + str(lofd[i].month - 1) + "," + str(lofd[i].day) + '),'
-                       + str((emotionCol["happy"]['h'][i])/totaltweets) + ","
-                       + str((emotionCol["sad"]['h'][i])/totaltweets)  + ","
-                       + str((emotionCol["confident"]['h'][i])/totaltweets)  + ","
-                       + str((emotionCol["worried"]['h'][i])/totaltweets) + ","
-                       + str((emotionCol["excited"]['h'][i])/totaltweets) + ","
-                       + str((emotionCol["bored"]['h'][i])/totaltweets) + "],\n")
+                       + str((emotionCol["happy"]['h'][i])/float(totaltweets)) + ","
+                       + str((emotionCol["sad"]['h'][i])/float(totaltweets))  + ","
+                       + str((emotionCol["confident"]['h'][i])/float(totaltweets))  + ","
+                       + str((emotionCol["worried"]['h'][i])/float(totaltweets)) + ","
+                       + str((emotionCol["excited"]['h'][i])/float(totaltweets)) + ","
+                       + str((emotionCol["bored"]['h'][i])/float(totaltweets)) + "],\n")
 
     
     thedata[len(thedata) - 1] = thedata[len(thedata) - 1][0:-2] #trims the "," at the very end
