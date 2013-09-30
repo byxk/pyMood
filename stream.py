@@ -110,7 +110,7 @@ class MyStreamer(TwythonStreamer):
                         break
         
         if time.time() - t0 > timeinsec:
-            genGraph(dayRecord, emotionCol, totaltweets)
+            genGraph(dayRecord, emotionCol, numoftweets)
             self.disconnect()
             print "Disconnected from Twitter stream"
             print "Uploading files"
