@@ -4,6 +4,7 @@
 ##Twython, Google Charts API
 ##TODO
 ##1. Statistics?!
+##2. Support console input! multithreading.
 from twython import TwythonStreamer
 import time
 import os
@@ -20,6 +21,8 @@ import pickle
 from os import listdir
 from os.path import isfile, join
 import subprocess
+import threading
+import Queue
 
 #period
 timeinsec = 3600
@@ -83,6 +86,21 @@ def restartscript():
     if sys.platform == 'win32':
         args = ['"%s"' % arg for arg in args]
     os.execv(sys.executable, args)
+
+    #Why did i create this function?...not sure.
+def genaGraph(dr, ec, nt):
+    #genGraph(dayRecord, emotionCol, numoftweets)
+    genGraph(dr, ec, nt)
+    try:
+        subprocess.check_call(['../dropbox_uploader.sh', 'upload', '../pymood', 'Public/PM'])
+    except:
+        restartscript()
+    #Restart script within itself
+    print "Restarting script..."
+    restartscript()
+
+
+
 #basic class provided by twython example code.
 class MyStreamer(TwythonStreamer):
     def on_success(self, data):
@@ -110,19 +128,12 @@ class MyStreamer(TwythonStreamer):
                         break
         
         if time.time() - t0 > timeinsec:
-            genGraph(dayRecord, emotionCol, numoftweets)
             self.disconnect()
             print "Disconnected from Twitter stream"
             print "Uploading files"
             #files = [f for f in os.listdir('.') if os.path.isfile(f)]
             #uploadfiles(files)
-            try:
-                subprocess.check_call(['../dropbox_uploader.sh', 'upload', '../pymood', 'Public/PM'])
-            except:
-                restartscript()
-            #Restart script within itself
-            print "Restarting script..."
-            restartscript()
+            genaGraph(dayRecord, emotionCol, numoftweets)
 
     def on_error(self, status_code, data):
         print status_code, data
@@ -135,10 +146,36 @@ stream = MyStreamer(APP_KEY, APP_SECRET,
 
 #.sample - get all tweets
 #.filter - filter out tweets.
-try:
+def runStream():
+    try:
     ##not sure if this is only called once to established a connection
-    stream.statuses.sample()
-except:
-    restartscript()
+        stream.statuses.sample()
+    except:
+        restartscript()
 #stream.user()  # Read the authenticated users home timeline (what they see on Twitter) in real-time
 #stream.site(follow='twitter')
+
+#Start streaming thread
+t = threading.Thread(target=runStream)
+t.daemon = True
+t.start()
+
+running = True
+while running:
+    userIn = raw_input(">>")
+    if "data" in userIn:
+        print "Number of tweets used: " + str(numoftweets)
+        print "Total number of tweets mined: " + str(totaltweets)
+    else if "restartscript" in userIn:
+        restartscript()
+    else if "gengraph" in userIn:
+        print "Generating"
+        genaGraph(dayRecord, emotionCol, numoftweets)
+    else if "getstat" in userIn:
+        try:
+            str(emotionCol[userIn.split(" ")(1)]['h'][-1])
+        except:
+            print "error getting emotion stats for: " + userIn.split(" ")(1)
+        
+        
+
