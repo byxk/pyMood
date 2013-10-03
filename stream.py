@@ -176,6 +176,6 @@ while running:
             str(emotionCol[userIn.split(" ")(1)]['h'][-1])
         except:
             print "error getting emotion stats for: " + userIn.split(" ")(1)
-        
+    userIn = "" 
         
 
