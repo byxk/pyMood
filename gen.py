@@ -48,6 +48,5 @@ def genGraph(lofd, emotionCol, totaltweets):
         pickle.dump(lofd, open("dr.dat", "wb"))
         pickle.dump(emotionCol, open("ecol.dat", "wb"))
     else:
-        if os.path.isfile("dr.dat"):
-                os.remove("dr.dat")
-                os.remove("ecol.dat")
+        os.remove("dr.dat")
+        os.remove("ecol.dat")
