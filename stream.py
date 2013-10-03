@@ -122,8 +122,8 @@ class MyStreamer(TwythonStreamer):
                         #print data['text'].encode('utf-8')
                         numoftweets += 1
                         countingtada += 1
-                        print "total tweets: " + str(totaltweets)
-                        print "Number of tweets used: " + str(numoftweets)
+                        #print "total tweets: " + str(totaltweets)
+                        #print "Number of tweets used: " + str(numoftweets)
                         emotionCol[emotion]['h'][-1] +=1
                         break
         
