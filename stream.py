@@ -166,12 +166,12 @@ while running:
     if "data" in userIn:
         print "Number of tweets used: " + str(numoftweets)
         print "Total number of tweets mined: " + str(totaltweets)
-    else if "restartscript" in userIn:
+    elif "restartscript" in userIn:
         restartscript()
-    else if "gengraph" in userIn:
+    elif "gengraph" in userIn:
         print "Generating"
         genaGraph(dayRecord, emotionCol, numoftweets)
-    else if "getstat" in userIn:
+    elif "getstat" in userIn:
         try:
             str(emotionCol[userIn.split(" ")(1)]['h'][-1])
         except:
